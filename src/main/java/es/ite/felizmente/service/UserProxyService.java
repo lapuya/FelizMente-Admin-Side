@@ -6,14 +6,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import es.ite.felizmente.entity.User;
 
+@Service
 public class UserProxyService {
 
-	public static final String URL = "http://localhost:8080/users/";
+	public static final String URL = "http://localhost:3306/users/";
 
 	@Autowired
 	private RestTemplate restTemplate;
