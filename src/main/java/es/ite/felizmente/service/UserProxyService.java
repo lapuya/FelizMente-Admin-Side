@@ -15,7 +15,7 @@ import es.ite.felizmente.entity.User;
 @Service
 public class UserProxyService {
 
-	public static final String URL = "http://localhost:3306/users/";
+	public static final String URL = "http://localhost:3306/felizmente/";
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -85,5 +85,5 @@ public class UserProxyService {
 			System.out.println("list -> Responde code: " + e.getStatusCode());
 			return null;
 		}
-	}	
+	}
 }
