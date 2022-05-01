@@ -3,6 +3,8 @@ package es.ite.felizmente;
 import java.util.List;
 import java.util.Scanner;
 
+import es.ite.felizmente.entity.Admin;
+import es.ite.felizmente.service.AdminProxyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +14,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-import es.ite.felizmente.entity.Address;
 import es.ite.felizmente.entity.User;
 import es.ite.felizmente.service.UserProxyService;
 
@@ -21,6 +22,9 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 	
 	@Autowired
 	private UserProxyService ups;
+
+	@Autowired
+	private AdminProxyService aps;
 
 
 	@Autowired
@@ -39,8 +43,18 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		int op;
+		int op, opLogin;
+		boolean succesful = false;
 
+		opLogin = loginMenu();
+		while (opLogin != 2 && !succesful) {
+			if (opLogin == 1) {
+				succesful = getAdminCredentials();
+			}
+			if (!succesful){
+				opLogin = loginMenu();
+			}
+		}
 		op = menu();
 		while (op != 6) {
 			if (op == 1)
@@ -62,7 +76,36 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 		// Stops our app
 		stopApplicacion();
 	}
-	
+
+	private boolean getAdminCredentials() {
+		Scanner sc = new Scanner(System.in);
+		String username, password;
+
+		System.out.println("******************** SYSTEM MENU ********************");
+		System.out.println("Please enter your username: ");
+		username = sc.nextLine();
+		System.out.println("Please enter your password: ");
+		password = sc.nextLine();
+
+		return aps.get(Admin.builder().username(username).password(password).build()) != null;
+	}
+
+	private int loginMenu() {
+		Scanner sc = new Scanner(System.in);
+		int op;
+
+		System.out.println("1. Login to System Menu");
+		System.out.println("2. Exit");
+		op = sc.nextInt();
+		while (op < 1 || op > 2) {
+			System.out.println("PLEASE SELECT THE CORRECT OPTION");
+			System.out.println("1. Login to System Menu");
+			System.out.println("2. Exit");
+			op = sc.nextInt();
+		}
+		return op;
+	}
+
 	public void stopApplicacion() {
 		SpringApplication.exit(context, () -> 0);
 	}
@@ -84,43 +127,27 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 	}
 
 	private void modifyUser() {
-		String street, number, region, zipCode, country; //address
-		String name, lastName;
+		String username, email, password;
 		Scanner sc = new Scanner(System.in);
 		int id;
 		User uModify = new User();
-		Address aModify = new Address();
-		System.out.println("Enter de the id of the user: ");
+		System.out.println("Enter the id of the user: ");
 		id = sc.nextInt();
 		uModify.setId(id);
 		
-		System.out.println("Name of the user: ");
-		name = sc.nextLine();
+		System.out.println("New Username: ");
+		username = sc.nextLine();
 
-		System.out.println("Surname of the user: ");
-		lastName = sc.nextLine();
-		
-		System.out.println("----- Address of the user ----- ");
-		System.out.println("Street: ");
-		street = sc.nextLine();
-		System.out.println("Number: ");
-		number = sc.nextLine();
-		System.out.println("Region: ");
-		region = sc.nextLine();
-		System.out.println("Zip Code: ");
-		zipCode = sc.nextLine();
-		System.out.println("Country: ");
-		country = sc.nextLine();
-		
-		aModify.setStreet(street);
-		aModify.setNumber(number);
-		aModify.setRegion(region);
-		aModify.setZipCode(zipCode);
-		aModify.setCountry(country);
-		uModify.setLastName(lastName);
-		uModify.setName(name);
-		uModify.setAddress(aModify);
-		
+		System.out.println("New email: ");
+		email = sc.nextLine();
+
+		System.out.println("New password: ");
+		password = sc.nextLine();
+
+		uModify.setUsername(username);
+		uModify.setEmail(email);
+		uModify.setPassword(password);
+
 		ups.modify(uModify);
 		
 	}
@@ -133,43 +160,26 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 		id = sc.nextInt();
 
 		ups.delete(id);
-		
 	}
 
 	private void registerUser() {
-		String street, number, region, zipCode, country; //address
-		String name, lastName;
+		String username, email, password;
 		Scanner sc = new Scanner(System.in);
 	
 		User u = new User();
-		Address a = new Address();
 
-		System.out.println("Name of the user: ");
-		name = sc.nextLine();
+		System.out.println("Enter the username: ");
+		username = sc.nextLine();
 
-		System.out.println("Surname of the user: ");
-		lastName = sc.nextLine();
-		
-		System.out.println("----- Address of the user ----- ");
-		System.out.println("Street: ");
-		street = sc.nextLine();
-		System.out.println("Number: ");
-		number = sc.nextLine();
-		System.out.println("Region: ");
-		region = sc.nextLine();
-		System.out.println("Zip Code: ");
-		zipCode = sc.nextLine();
-		System.out.println("Country: ");
-		country = sc.nextLine();
-		
-		a.setStreet(street);
-		a.setNumber(number);
-		a.setRegion(region);
-		a.setZipCode(zipCode);
-		a.setCountry(country);
-		u.setLastName(lastName);
-		u.setName(name);
-		u.setAddress(a);
+		System.out.println("Enter the email: ");
+		email = sc.nextLine();
+
+		System.out.println("Enter the password: ");
+		password = sc.nextLine();
+
+		u.setUsername(username);
+		u.setEmail(email);
+		u.setPassword(password);
 
 		ups.register(u);
 	}
@@ -188,6 +198,7 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 		System.out.println("6. Exit");
 
 		op = sc.nextInt();
+		sc.nextLine();
 		while (op < 1 || op > 6) {
 			System.out.println("1. Register a User");
 			System.out.println("2. Delete a User by ID");
@@ -196,13 +207,9 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 			System.out.println("5. List all Users");
 			System.out.println("6. Exit");
 			op = sc.nextInt();
+			sc.nextLine();
 		}
 
 		return op;
-
 	}
-
-	
-	
-
 }
