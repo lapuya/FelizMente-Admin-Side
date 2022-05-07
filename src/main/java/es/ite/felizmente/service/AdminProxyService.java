@@ -16,12 +16,9 @@ public class AdminProxyService {
     private RestTemplate restTemplate;
 
     public Admin get(Admin a) {
-        //possible encryptation of the token here
-        StringBuilder sb = new StringBuilder();
-        String token = sb.append(a.getUsername()).append("-").append(a.getPassword()).toString();
         try {
-            String completeURL = URL + token;
-            ResponseEntity<Admin> re = restTemplate.getForEntity(completeURL, Admin.class);
+            String completeURL = URL+"login";
+            ResponseEntity<Admin> re = restTemplate.postForEntity(completeURL, a, Admin.class);
             HttpStatus hs = re.getStatusCode();
             if (hs == HttpStatus.OK) {
                 return re.getBody();

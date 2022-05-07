@@ -15,7 +15,7 @@ import es.ite.felizmente.entity.User;
 @Service
 public class UserProxyService {
 
-	public static final String URL = "http://localhost:8080/felizmente/users";
+	public static final String URL = "http://localhost:8080/felizmente/users/";
 
 	@Autowired
 	private RestTemplate restTemplate;

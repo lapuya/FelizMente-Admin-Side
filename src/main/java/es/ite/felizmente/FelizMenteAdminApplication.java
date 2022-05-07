@@ -134,7 +134,7 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 		System.out.println("Enter the id of the user: ");
 		id = sc.nextInt();
 		uModify.setId(id);
-		
+		sc.nextLine();
 		System.out.println("New Username: ");
 		username = sc.nextLine();
 
@@ -159,7 +159,8 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 		System.out.println("Enter the id of the user: ");
 		id = sc.nextInt();
 
-		ups.delete(id);
+		if(ups.delete(id))
+			System.out.println("Usuario con id: " + id + " borrado correctamente");
 	}
 
 	private void registerUser() {
@@ -200,6 +201,7 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 		op = sc.nextInt();
 		sc.nextLine();
 		while (op < 1 || op > 6) {
+			System.out.println("Please select a correct option.");
 			System.out.println("1. Register a User");
 			System.out.println("2. Delete a User by ID");
 			System.out.println("3. Modify User by ID");
