@@ -22,20 +22,18 @@ public class UserProxyService {
 
 	public User register(User u) {
 		try {
-
 			ResponseEntity<User> re = restTemplate.postForEntity(URL, u, User.class);
 			System.out.println("register -> Response code " + re.getStatusCode());
 			return re.getBody();
 		} catch (HttpClientErrorException e) {
 			System.out.println("register -> User not registered, id: " + u);
-			System.out.println("register -> Responde code: " + e.getStatusCode());
+			System.out.println("register -> Response code: " + e.getStatusCode());
 			return null;
 		}
 	}
 
 	public boolean delete(int id) {
 		try {
-
 			restTemplate.delete(URL + id);
 			return true;
 		} catch (HttpClientErrorException e) {
@@ -47,7 +45,6 @@ public class UserProxyService {
 
 	public boolean modify(User v) {
 		try {
-
 			restTemplate.put(URL + v.getId(), v, User.class);
 			return true;
 		} catch (HttpClientErrorException e) {
@@ -75,14 +72,13 @@ public class UserProxyService {
 	}
 
 	public List<User> list() {
-
 		try {
 			ResponseEntity<User[]> response = restTemplate.getForEntity(URL, User[].class);
 			User[] arrayPersonas = response.getBody();
 			return Arrays.asList(arrayPersonas);// convertimos el array en un arraylist
 		} catch (HttpClientErrorException e) {
 			System.out.println("list -> Error getting list of Users");
-			System.out.println("list -> Responde code: " + e.getStatusCode());
+			System.out.println("list -> Response code: " + e.getStatusCode());
 			return null;
 		}
 	}
