@@ -19,7 +19,7 @@ import es.ite.felizmente.service.UserProxyService;
 
 @SpringBootApplication
 public class FelizMenteAdminApplication implements CommandLineRunner {
-	
+
 	@Autowired
 	private UserProxyService ups;
 
@@ -39,7 +39,7 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 	public static void main(String[] args) {
 		SpringApplication.run(FelizMenteAdminApplication.class, args);
 	}
-	
+
 	@Override
 	public void run(String... args) throws Exception {
 
@@ -55,19 +55,21 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 				opLogin = loginMenu();
 			}
 		}
-		op = menu();
-		while (op != 6) {
-			if (op == 1)
-				registerUser();
-			else if (op == 2)
-				deleteUser();
-			else if (op == 3)
-				modifyUser();
-			else if (op == 4)
-				getUserById();
-			else if (op == 5)
-				listUsers();
+		if (opLogin == 1) {
 			op = menu();
+			while (op != 6) {
+				if (op == 1)
+					registerUser();
+				else if (op == 2)
+					deleteUser();
+				else if (op == 3)
+					modifyUser();
+				else if (op == 4)
+					getUserById();
+				else if (op == 5)
+					listUsers();
+				op = menu();
+			}
 
 		}
 
@@ -92,17 +94,28 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 
 	private int loginMenu() {
 		Scanner sc = new Scanner(System.in);
-		int op;
+		boolean error = true;
+		int op = 0;
 
-		System.out.println("1. Login to System Menu");
-		System.out.println("2. Exit");
-		op = sc.nextInt();
-		while (op < 1 || op > 2) {
-			System.out.println("PLEASE SELECT THE CORRECT OPTION");
-			System.out.println("1. Login to System Menu");
-			System.out.println("2. Exit");
-			op = sc.nextInt();
-		}
+		do {
+			try {
+				System.out.println("1. Login to System Menu");
+				System.out.println("2. Exit");
+				op = sc.nextInt();
+				while (op < 1 || op > 2) {
+					System.out.println("PLEASE SELECT THE CORRECT OPTION");
+					System.out.println("1. Login to System Menu");
+					System.out.println("2. Exit");
+					op = sc.nextInt();
+				}
+				error = false;
+			}
+			catch (Exception e) {
+				System.out.println("Please, put a number");
+				sc.next();
+			}
+		} while (error);
+
 		return op;
 	}
 
@@ -114,7 +127,7 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 		List<User> lista = ups.list();
 		for (int i = 0; i < lista.size(); i++)
 			System.out.println(lista.get(i));
-		
+
 	}
 
 	private void getUserById() {
@@ -123,7 +136,7 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter the id of the user: ");
 		id = sc.nextInt();
-		System.out.println(ups.get(id));		
+		System.out.println(ups.get(id));
 	}
 
 	private void modifyUser() {
@@ -149,7 +162,7 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 		uModify.setPassword(password);
 
 		ups.modify(uModify);
-		
+
 	}
 
 	private void deleteUser() {
@@ -166,7 +179,7 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 	private void registerUser() {
 		String username, email, password;
 		Scanner sc = new Scanner(System.in);
-	
+
 		User u = new User();
 
 		System.out.println("Enter the username: ");
@@ -187,30 +200,40 @@ public class FelizMenteAdminApplication implements CommandLineRunner {
 
 	public int menu() {
 		Scanner sc = new Scanner(System.in);
-		int op;
+		boolean error = true;
+		int op = 0;
 
-		System.out.println("***************** MENU *****************");
-		System.out.println("Select an option");
-		System.out.println("1. Register a User");
-		System.out.println("2. Delete a User by ID");
-		System.out.println("3. Modify User by ID");
-		System.out.println("4. Get a User by ID");
-		System.out.println("5. List all Users");
-		System.out.println("6. Exit");
+		do {
+			try {
+				System.out.println("***************** MENU *****************");
+				System.out.println("Select an option");
+				System.out.println("1. Register a User");
+				System.out.println("2. Delete a User by ID");
+				System.out.println("3. Modify User by ID");
+				System.out.println("4. Get a User by ID");
+				System.out.println("5. List all Users");
+				System.out.println("6. Exit");
 
-		op = sc.nextInt();
-		sc.nextLine();
-		while (op < 1 || op > 6) {
-			System.out.println("Please select a correct option.");
-			System.out.println("1. Register a User");
-			System.out.println("2. Delete a User by ID");
-			System.out.println("3. Modify User by ID");
-			System.out.println("4. Get a User by ID");
-			System.out.println("5. List all Users");
-			System.out.println("6. Exit");
-			op = sc.nextInt();
-			sc.nextLine();
-		}
+				op = sc.nextInt();
+				sc.nextLine();
+				while (op < 1 || op > 6) {
+					System.out.println("Please select a correct option.");
+					System.out.println("1. Register a User");
+					System.out.println("2. Delete a User by ID");
+					System.out.println("3. Modify User by ID");
+					System.out.println("4. Get a User by ID");
+					System.out.println("5. List all Users");
+					System.out.println("6. Exit");
+					op = sc.nextInt();
+					sc.nextLine();
+				}
+				error = false;
+			}
+			catch (Exception e) {
+				System.out.println("Please, put a number");
+				sc.next();
+			}
+		} while (error);
 
 		return op;
 	}
